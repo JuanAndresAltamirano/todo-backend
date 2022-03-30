@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TaskModule } from './task/task.module';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { rootCertificates } from 'tls';
+import { FolderModule } from './folder/folder.module';
 import entities from './typeorm';
 
 @Module({
@@ -16,7 +17,7 @@ import entities from './typeorm';
     database: 'todo_db',
     entities,
     synchronize: true,
-  })],
+  }), FolderModule],
   controllers: [AppController],
   providers: [AppService],
 })

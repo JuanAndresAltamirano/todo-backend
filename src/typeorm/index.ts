@@ -1,8 +1,9 @@
 import { Task } from "./Task";
+import { Folder } from "./Folder";
 
-const entities = [Task];
+const entities = [Task, Folder];
 
-export { Task };
+export { Task, Folder };
 
 export default entities;
 
