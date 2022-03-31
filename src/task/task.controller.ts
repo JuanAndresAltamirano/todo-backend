@@ -11,10 +11,15 @@ export class TaskController {
     ) {}
 
     @Post('/create')
-    createTask(@Body() createTaskDTO: CreateTaskDTO){
-        console.log(createTaskDTO);
-        return this.taskService.createTask(createTaskDTO);
+    async createTask(@Res() res, @Body() createTaskDTO: CreateTaskDTO){
+        const task = await this.taskService.createTask(createTaskDTO);
+        return res.status(HttpStatus.OK).json({
+            message: 'received',
+            task: task
+        });
     }
+
+    //return this.taskService.createTask(createTaskDTO);
 
     @Get()
     findAll() {
@@ -31,7 +36,7 @@ export class TaskController {
     @Put('/update')
     async updateTask(@Res() res, @Body() updateTaskDTO: UpdateTaskDTO, @Query('id') id){
         const updatedTask = await this.taskService.updateTask(id, updateTaskDTO);
-        if(!updatedTask) throw new NotFoundException('Product Does not exists');
+        if(!updatedTask) throw new NotFoundException('Task Does not exists');
         return res.status(HttpStatus.OK).json({
             message: 'Task Updated Succesfully',
             updatedTask

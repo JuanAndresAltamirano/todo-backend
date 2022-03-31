@@ -25,11 +25,11 @@ export class FolderService {
     }
     
     findOne(id: number) {
-        return this.folderRepository.findOne(id,{relations:["todos"]});
+        return this.folderRepository.findOne(id,{relations:["tasks"]});
     }
     
     async update(id: number, updateFolderDto: UpdateFolderDTO) {
-        return await this.folderRepository.save(updateFolderDto);
+        return await this.folderRepository.update(id,updateFolderDto);
     }
     
     async remove(id: number) {

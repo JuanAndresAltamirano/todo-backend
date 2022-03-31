@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Query, HttpStatus, NotFoundException } from '@nestjs/common';
 import { FolderService } from './folder.service';
 import { CreateFolderDTO } from './dto/folder.dto';
 import { UpdateFolderDTO } from './dto/update-folder.dto';
@@ -7,9 +7,13 @@ import { UpdateFolderDTO } from './dto/update-folder.dto';
 export class FolderController {
     constructor(private readonly foldersService: FolderService) {}
 
-  @Post()
-  create(@Body() createFolderDto: CreateFolderDTO) {
-    return this.foldersService.create(createFolderDto);
+  @Post('/create')
+  async create(@Res() res, @Body() createFolderDTO: CreateFolderDTO) {
+    const folder = await this.foldersService.create(createFolderDTO);
+    return res.status(HttpStatus.OK).json({
+        message: 'received',
+        folder: folder
+    });
   }
 
   @Get()
@@ -18,17 +22,29 @@ export class FolderController {
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
-    return this.foldersService.findOne(+id);
-  }
+    async findOne(@Res() res, @Param('id') id) {
+        const folder = await this.foldersService.findOne(id);
+        if(!folder) throw new NotFoundException('Folder Does Not exists');
+        return res.status(HttpStatus.OK).json(folder);
+    }
 
-  @Put('/:id')
-  update(@Param('id') id: string, @Body() updateFolderDTO: UpdateFolderDTO) {
-    return this.foldersService.update(+id, updateFolderDTO);
-  }
+    @Put('/update')
+    async updateTask(@Res() res, @Body() updateTaskDTO: UpdateFolderDTO, @Query('id') id){
+        const updatedTask = await this.foldersService.update(id, updateTaskDTO);
+        if(!updatedTask) throw new NotFoundException('Folder Does not exists');
+        return res.status(HttpStatus.OK).json({
+            message: 'Folder Updated Succesfully',
+            updatedTask
+        });
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.foldersService.remove(+id);
+  @Delete('/delete')
+    async remove(@Res() res, @Query('id') id) {
+    const folderDeleted = await this.foldersService.remove(id);
+    if(!folderDeleted) throw new NotFoundException('Task Does not exists');
+    return res.status(HttpStatus.OK).json({
+        message: 'Folder Deleted Succesfully',
+        folderDeleted
+    })
   }
 }
