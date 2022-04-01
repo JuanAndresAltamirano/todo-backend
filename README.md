@@ -44,3 +44,6 @@ and you can run the app by executing the following command:
 ```bash
 npm run start:dev
 ```
+After that, please visit:
+
+- [http://localhost:3000](http:localhost:3000)
