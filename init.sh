@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function MAKE_ORM_CONFIG()
+function MAKE_ENV()
 {
 	echo "DATABASE_HOST = localhost">.env
 	echo "DATABASE_PORT = 3306">>.env
@@ -16,6 +16,7 @@ function CONFIGURE_APP()
 	cd todo-client
 	npm install
 	npm run build:mac
+	MAKE_ENV "$USER" "$PASSWORD" "$DATABASE_NAME"
 }
 
 DATABASE_NAME="todo_db"
@@ -26,5 +27,6 @@ read -s -p "Enter MariaDb password:" PASSWORD
 while ! mysql -u $USER -p$PASSWORD  -e ";" ; do
        read -s -p "Can't connect, please retry: " PASSWORD
 done
+
 
 CONFIGURE_APP "$USER" "$PASSWORD" "$DATABASE_NAME"
